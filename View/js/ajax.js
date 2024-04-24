@@ -10,7 +10,6 @@ $( document ).ready(function() {
 
     ////////////////////////////// START CLICK LISTENERS + FUNCTIONS //////////////////////////////
 
-
     function applyClickListeners() {
 
         $('#newConfigButton').on('click', (event) => {
@@ -22,7 +21,31 @@ $( document ).ready(function() {
 
        $('#config_submit').on('click', (event) => {
 
-            // TODO: ajax request
+            var hostId = 'config_host';
+            var userId = 'config_user';
+            var passwordId = 'config_password';
+            var portId = 'config_port';
+
+            var host = $(`#${hostId}`).val();
+            var user = $(`#${userId}`).val();
+            var password = $(`#${passwordId}`).val();
+            var port = $(`#${portId}`).val();
+
+            var url = `../Controller/router.php?action=addConfig&${hostId}=${host}&${userId}=${user}&${passwordId}=${password}&${portId}=${port}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                clearConfigForm();
+                closeConfigForm();
+                alert('Connection added successfully :)');
+
+                // TODO: Reload config select box!
+            })
+
+            .fail((response) => {
+                alert('Failed to add connection :(');
+            });
         });
     }
 
@@ -52,6 +75,13 @@ $( document ).ready(function() {
         var button = $('#newConfigButton');
         button.removeClass('disabled');
         button.addClass('transition1');
+    }
+
+    function clearConfigForm() {
+        let inputs = $('#newConfigForm input');
+        $.each( inputs, function( key, value ) {
+            inputs[key].value = '';
+        });
     }
 
     ////////////////////////////// END CLICK LISTENERS + FUNCTIONS //////////////////////////////
@@ -138,28 +168,29 @@ $( document ).ready(function() {
             dbErrorSpan.html('');
             
 
-            // TODO: get possible databases for chosen config by ajax request 
-            // request: getDatabases&configId=configId
-            let data = [{"id":1,"name":"test_database"}];
-            let status = 'ok';
-            let errorMessage = 'An error has ocurred';
+            // get possible databases for chosen config
+            $.get({url: `../Controller/router.php?action=getDatabases&configId=${configId}`})
 
-            if (status == 'ok') {
+                .done((response) => {
+                    response = JSON.parse(response);
 
-                dbSelect.attr('hidden', false);
-                dbLoader.attr('hidden', true);
+                    dbSelect.attr('hidden', false);
+                    dbLoader.attr('hidden', true);
 
-                dbSelect.html(new Option('Choose...', 0));
+                    dbSelect.html(new Option('Choose...', 0));
 
-                data.forEach((d) => {
-                    dbSelect.append(new Option(d.name, d.id));
+                    response.data.forEach((d) => {
+                        dbSelect.append(new Option(d.name, d.id));
+                    });
+
+                })
+
+                .fail((response) => {
+                    response = JSON.parse(response.responseText);
+
+                    dbLoader.attr('hidden', true);
+                    dbErrorSpan.html(response.message);
                 });
-
-            } else {
-               
-                dbLoader.attr('hidden', true);
-                dbErrorSpan.html(errorMessage);
-            }
         });
 
 
@@ -176,27 +207,28 @@ $( document ).ready(function() {
             var configId = configSelect.val();
             var databaseId = dbSelect.val();
             // TODO: get possible databases for chosen config by ajax request 
-            // request: getTables&databaseId=databaseId&configId=configId
-            let data = [{"id":1,"name":"test_table_1"}];
-            let status = 'ok';
-            let errorMessage = 'An error has ocurred';
+            $.get({url: `../Controller/router.php?action=getTables&databaseId=${databaseId}&configId=${configId}`})
 
-            if (status == 'ok') {
+            .done((response) => {
+                response = JSON.parse(response);
 
                 tableSelect.attr('hidden', false);
                 dbLoader.attr('hidden', true);
 
                 tableSelect.html(new Option('Choose...', 0));
 
-                data.forEach((d) => {
+                response.data.forEach((d) => {
                     tableSelect.append(new Option(d.name, d.id));
                 });
 
-            } else {
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
 
                 tableLoader.attr('hidden', true);
-                tableErrorSpan.html(errorMessage);
-            };
+                tableErrorSpan.html(response.message);
+            });
 
         });
 
@@ -209,26 +241,32 @@ $( document ).ready(function() {
 
     function fillConfigSelectbox() {
         
-        // TODO: ajax request
-        // request: getConfigs
-
-        let data = [{"id":1,"host":"so-ag.ch","username":"root","password":"","port":3306},{"id":2,"host":"localhost","username":"root","password":"","port":3306}];
-        let status = 'ok';
-        let errorMessage = 'An error has ocurred';
-
         let selectbox = $('#configSelectDiv > select');
         let errorSpan = selectbox.siblings('span');
-        if (status == 'ok') {
-            
+
+        $.get({url: `../Controller/router.php?action=getConfigs`})
+
+        .done((response) => {
+            response = JSON.parse(response);
+
             selectbox.html(new Option('Choose...', 0));
-            data.forEach((c) => {
+            response.data.forEach((c) => {
                 selectbox.append(new Option(c.host, c.id));
             });
-        } else {
+        })
+
+        .fail((response) => {
+            response = JSON.parse(response.responseText);
+
             selectbox.html(new Option('Error'));
             selectbox.attr('disabled', true);
-            errorSpan.html(errorMessage);
-        }
+            errorSpan.html(response.message);
+        });
+        
+    }
+
+    function resetSelectbox(id) {
+        $(`#id`)
     }
 
     ////////////////////////////// END CORE FUNCTIONS //////////////////////////////

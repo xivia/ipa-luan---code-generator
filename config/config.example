@@ -1,0 +1,6 @@
+# config example
+
+# create local config file - named "config.csv" (will be ignored by git)
+
+# structure
+# <id>;<host>;<user>;<pwd>;<port>
