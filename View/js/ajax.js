@@ -40,14 +40,204 @@ $( document ).ready(function() {
                 closeConfigForm();
                 alert('Connection added successfully :)');
 
-                // TODO: Reload config select box!
+                fillConfigSelectbox();
             })
 
             .fail((response) => {
                 alert('Failed to add connection :(');
             });
         });
+
+       $('#generatePHPModel').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generatePHPModel&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+       $('#generatePHPGateway').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generatePHPGateway&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+        $('#generateExtJSModel').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generateExtJSModel&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+        $('#generateExtJSGrid').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generateExtJSGrid&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+        $('#generateExtJSAdd').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generateExtJSAdd&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+        $('#generateExtJSEdit').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generateExtJSEdit&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
+
+        $('#generateExtJSInfo').on('click', (event) => {
+            
+            var configId = $('#configSelect').val();
+            var databaseId = $('#databaseSelect').val();
+            var tableId = $('#tableSelect').val();
+            var url = `../Controller/router.php?action=generateExtJSInfo&configId=${configId}&databaseId=${databaseId}&tableId=${tableId}`;
+
+            $.post({url: url})
+
+            .done((response) => {
+                response = JSON.parse(response);
+
+                $('#content > p').html(`<pre>${response.data}</pre>`);
+                $('#content > span').html('');
+                $('#content').attr('hidden', false);
+            })
+
+            .fail((response) => {
+                response = JSON.parse(response.responseText);
+
+                $('#content > p').html('');
+                $('#content > span').html(response.message);
+            });
+
+        });
     }
+
+    $('#copyButton').on('click', (event) => {
+
+            selectText('content');
+            document.execCommand('copy');
+            clearSelection();
+
+        });
 
     function openConfigForm() {
 
@@ -82,6 +272,27 @@ $( document ).ready(function() {
         $.each( inputs, function( key, value ) {
             inputs[key].value = '';
         });
+    }
+
+    function selectText(containerid) {
+        if (document.selection) { // IE
+                var range = document.body.createTextRange();
+                range.moveToElementText(document.getElementById(containerid));
+                range.select();
+            } else if (window.getSelection) {
+                var range = document.createRange();
+                range.selectNode(document.getElementById(containerid));
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+            }
+    }
+
+    function clearSelection() {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else if (document.selection) {
+            document.selection.empty();
+        }
     }
 
     ////////////////////////////// END CLICK LISTENERS + FUNCTIONS //////////////////////////////
@@ -232,6 +443,10 @@ $( document ).ready(function() {
 
         });
 
+        tableSelect.on('change', (event) => {
+            removeOverlay();
+        });
+
     }
 
     ////////////////////////////// END CHANGE LISTENERS + FUNCTIONS //////////////////////////////
@@ -265,8 +480,9 @@ $( document ).ready(function() {
         
     }
 
-    function resetSelectbox(id) {
-        $(`#id`)
+    function removeOverlay() {
+        $('#contentPanel').removeClass('disabled');
+        $('.fancyButton').removeClass('disabled');
     }
 
     ////////////////////////////// END CORE FUNCTIONS //////////////////////////////

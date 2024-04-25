@@ -56,6 +56,62 @@ if(isset($_GET['action']) && $_GET['action'] == 'addConfig') {
     exit();
 }
 
+if(isset($_GET['action']) && $_GET['action'] == 'generatePHPModel') {
+
+    // dummy data
+    echo '{"data": "php model"}';
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generatePHPGateway') {
+
+    // dummy data
+    echo '{"data": "php gateway"}';
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSModel') {
+
+    // dummy data
+    echo '{"data": "extjs model"}';
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSGrid') {
+
+    // dummy data
+    echo '{"data": "extjs grid"}';
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSAdd') {
+
+    // dummy data
+    echo '{"data": "extjs add"}';;
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSEdit') {
+
+    // dummy data
+    echo '{"data": "extjs edit"}';
+
+    exit();
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSInfo') {
+
+    // dummy data
+    echo '{"data": "extjs info"}';
+
+    exit();
+}
+
 echo('{"msg": "fallthrough"}');
 
 

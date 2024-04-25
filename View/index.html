@@ -46,7 +46,7 @@
                 <hr>
                 
                 <div id="newConfigDiv">
-                <button id="newConfigButton">New config...</button>
+                <button id="newConfigButton" class="fancyButton">New config...</button>
                     <div class="card no-opacity hidden" id="newConfigCard">
                         <div class="card-header">
                             Add a new database connection!
@@ -91,16 +91,39 @@
                 </div>
             </div>
 
+
             <div class="col-1 sidebar">
             </div>
 
-            <div id="contentPanel" class="col-8">
-                <h1 class="d-flex justify-content-center">Modern-SWO Code Generator</h1>
-                <!-- TODO: Snippet generation panel -->
-            </div>
 
+            <div id="contentPanel" class="col-8 disabled">
+                <h1 class="d-flex justify-content-center">Modern-SWO Code Generator</h1>
+                
+
+                
+                <br>
+                <label class="buttonLabel">PHP</label>
+                <br>
+                <button id ="generatePHPModel" class="fade-in fancyButton disabled">Model Class</button>
+                <button id ="generatePHPGateway" class="fade-in fancyButton disabled">Gateway Class</button>
+                <br><br>
+                <label class="buttonLabel">ExtJS</label>
+                <br>
+                <button id ="generateExtJSModel" class="fade-in fancyButton disabled">Model Class</button>
+                <button id ="generateExtJSGrid" class="fade-in fancyButton disabled">Grid List</button>
+                <button id ="generateExtJSAdd" class="fade-in fancyButton disabled">&laquo;Add&raquo; Dialog</button>
+                <button id ="generateExtJSEdit" class="fade-in fancyButton disabled">&laquo;Edit&raquo; Dialog</button>
+                <button id ="generateExtJSInfo" class="fade-in fancyButton disabled">&laquo;Info&raquo; Dialog</button>
+                <br><br>
+                <h2>Output:</h2>
+                <div id="content" class="p-4" hidden>
+                    <button id="copyButton" class="fancyButton">Copy</button>
+                    <p></p>
+                    <span class="error"></span>
+                    
+                </div>
+                
         </div>
-            
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
