@@ -59,6 +59,33 @@ class Table implements \JsonSerializable {
         return $object;
     }
 
+    public function getFields() {
+        $config = $this->getDatabase()->getConfig();
+        $database = $this->getDatabase();
+        
+        $mysqliConn = MysqliDB::getInstance()->getConnection($config, $database);
+
+        $dbName = $database->getName();
+        $tableName = $this->getName();
+
+        $query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS
+                  WHERE TABLE_SCHEMA = '$dbName' AND TABLE_NAME = '$tableName';";
+        
+        $res = $mysqliConn->query($query);
+        $fields = $res->fetch_all(MYSQLI_ASSOC);
+
+        if (self::$USE_CUSTOM_FIELDNAMES) {
+            foreach ($fields as &$field) {
+                $key = array_search($field['COLUMN_NAME'], array_keys(self::$CUSTOM_FIELDNAMES));
+                if ($key !== false) {
+                    $field['COLUMN_NAME'] = array_values(self::$CUSTOM_FIELDNAMES)[$key];
+                }
+            }
+        }
+
+        return $fields;
+    }
+
     public function jsonSerialize(): mixed {
         return [
             'id'     => $this->id,

@@ -58,16 +58,24 @@ if(isset($_GET['action']) && $_GET['action'] == 'addConfig') {
 
 if(isset($_GET['action']) && $_GET['action'] == 'generatePHPModel') {
 
-    // dummy data
-    echo '{"data": "php model"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerPHP();
+    $snippet->generateModel($configId, $databaseId, $tableId);
 
     exit();
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'generatePHPGateway') {
 
-    // dummy data
-    echo '{"data": "php gateway"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerPHP();
+    $snippet->generateGateway($configId, $databaseId, $tableId);
 
     exit();
 }
