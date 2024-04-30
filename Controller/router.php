@@ -1,8 +1,6 @@
 <?php
 namespace Controller;
 
-use Controller\ConfigController;
-
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
@@ -42,19 +40,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'getTables') {
     exit();
 }
 
-if(isset($_GET['action']) && $_GET['action'] == 'addConfig') {
-
-    $host = isset($_GET['config_host']) ? $_GET['config_host'] : '';
-    $user = isset($_GET['config_user']) ? $_GET['config_user'] : '';
-    $password = isset($_GET['config_password']) ? $_GET['config_password'] : '';
-    $port = isset($_GET['config_port']) ? $_GET['config_port'] : 0;
-
-    $controller = new ConfigController();
-    $controller->createConfig($host, $user, $password, $port);
-
-
-    exit();
-}
 
 if(isset($_GET['action']) && $_GET['action'] == 'generatePHPModel') {
 
@@ -82,40 +67,76 @@ if(isset($_GET['action']) && $_GET['action'] == 'generatePHPGateway') {
 
 if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSModel') {
 
-    // dummy data
-    echo '{"data": "extjs model"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerExtJS();
+    $snippet->generateModel($configId, $databaseId, $tableId);
 
     exit();
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSGrid') {
 
-    // dummy data
-    echo '{"data": "extjs grid"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerExtJS();
+    $snippet->generateGridList($configId, $databaseId, $tableId);
 
     exit();
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSAdd') {
 
-    // dummy data
-    echo '{"data": "extjs add"}';;
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerExtJS();
+    $snippet->generateAddDialog($configId, $databaseId, $tableId);
 
     exit();
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSEdit') {
 
-    // dummy data
-    echo '{"data": "extjs edit"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerExtJS();
+    $snippet->generateEditDialog($configId, $databaseId, $tableId);
 
     exit();
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'generateExtJSInfo') {
 
-    // dummy data
-    echo '{"data": "extjs info"}';
+    $configId = isset($_GET['configId']) ? $_GET['configId'] : 0;
+    $databaseId = isset($_GET['databaseId']) ? $_GET['databaseId'] : 0;
+    $tableId = isset($_GET['tableId']) ? $_GET['tableId'] : '';
+
+    $snippet = new SnippetControllerExtJS();
+    $snippet->generateInfoDialog($configId, $databaseId, $tableId);
+
+    exit();
+}
+
+// POST REQUESTS
+
+if(isset($_POST['action']) && $_POST['action'] == 'addConfig') {
+
+    $host = isset($_POST['config_host']) ? $_POST['config_host'] : '';
+    $user = isset($_POST['config_user']) ? $_POST['config_user'] : '';
+    $password = isset($_POST['config_password']) ? $_POST['config_password'] : '';
+    $port = isset($_POST['config_port']) ? $_POST['config_port'] : 0;
+
+    $controller = new ConfigController();
+    $controller->createConfig($host, $user, $password, $port);
+
 
     exit();
 }

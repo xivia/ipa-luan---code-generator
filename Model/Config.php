@@ -12,8 +12,6 @@ class Config implements \JsonSerializable {
     private string   $password;
     private int      $port;
 
-    private static int $counter = 0;
-
 
     public function __construct($id, $host, $username, $password, $port) {
         

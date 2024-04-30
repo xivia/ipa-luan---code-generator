@@ -31,9 +31,9 @@ $( document ).ready(function() {
             var password = $(`#${passwordId}`).val();
             var port = $(`#${portId}`).val();
 
-            var url = `../Controller/router.php?action=addConfig&${hostId}=${host}&${userId}=${user}&${passwordId}=${password}&${portId}=${port}`;
+            var url = `../Controller/router.php`;
 
-            $.post({url: url})
+            $.post({url: url}, {action: 'addConfig', [hostId]: host, [userId]: user, [passwordId]: password, [portId]: port})
 
             .done((response) => {
                 clearConfigForm();

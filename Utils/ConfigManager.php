@@ -5,11 +5,11 @@ use Model\Config;
 
 class ConfigManager {
 
-    private Array $configs = [];
-
     private static ConfigManager $instance;
 
     private static string $configFilePath = '../config/config.csv';
+    
+    private Array $configs = [];
 
 
     private function __construct() {

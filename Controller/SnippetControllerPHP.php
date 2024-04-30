@@ -294,29 +294,4 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         return parent::prepareFields($fields, $filterOut);
     }
 
-    /*public function generateModelObjectCreate($configId, $databaseId, $tableId) {
-        $response = new Response();
-
-        $config = ConfigManager::getInstance()->getConfigById($configId);
-        $database = Database::getById($config, $databaseId);
-        $table = Table::getById($database, $tableId);
-
-        $fields = $table->getFields();
-        $content = '';
-        foreach ($fields as $field) {
-            $field['DATA_TYPE'] = $this->SQLToPHPDatatype($field['DATA_TYPE']);
-            $field['COLUMN_NAME'] = lcfirst($field['COLUMN_NAME']);
-            $content .= "private {$field['DATA_TYPE']} \${$field['COLUMN_NAME']};<br>";
-        }
-
-        $response->setStatus(Response::$STATUS_OK);
-        $response->setMessage('');
-        $response->setHttpResponseCode(Response::$HTTP_STATUS_OK);
-        $response->setData($content);
-
-        $response->respond();
-    }
-*/
-    
-
 }
