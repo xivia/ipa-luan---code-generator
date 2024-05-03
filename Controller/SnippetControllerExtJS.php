@@ -11,8 +11,6 @@ use Utils\ConfigManager;
 
 Class SnippetControllerExtJs extends SnippetControllerBasic {
 
-    private static array $DEFAULT_VALUES = ['int' => 'NULL', 'float' => 'NULL', 'string' => '\'\'', 'DateTime' => 'NULL'];
-
     public function generateModel($configId, $databaseId, $tableId) {
         $response = new Response();
 
@@ -607,7 +605,7 @@ Class SnippetControllerExtJs extends SnippetControllerBasic {
 
     protected function prepareFields(array $fields, array $filterOut = []): array {
 
-        // translate SQL data types to PHP
+        // translate SQL data types to ExtJs
         $wholeNumberSQLTypes = ['int', 'integer', 'bigint', 'smallint', 'tinyint'];
         $decimalNumberSQLTypes = ['dec', 'decimal', 'float', 'double', 'double precision'];
         $stringSQLTypes = ['char', 'varchar', 'tinyblob', 'mediumblob', 'blob', 'longblob', 'tinytext', 'mediumtext', 'text', 'longtext'];

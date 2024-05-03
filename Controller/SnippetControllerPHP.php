@@ -119,7 +119,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
 
             $content .= "{$this->indent(1)}private {$field['DATA_TYPE_DISPLAY']}$typeSpaces \${$field['COLUMN_NAME']}$nameSpaces = {$field['DEFAULT_VALUE']};<br>";
         }
-        $content = rtrim($content, '<br>');
+        $content = $this->removeLastOccurrence($content, '<br>');
         return $content;
     }
 
@@ -131,10 +131,12 @@ class SnippetControllerPHP extends SnippetControllerBasic {
             $nameSpaces = $field['COLUMN_NAME_SPACES'];
             $content .= "{$this->indent(3)}'$lname'$nameSpaces => \$this->$lname,<br>";
         }
-        $content .= "{$this->indent(2)}}";
+        $content .= "{$this->indent(2)}]";
+        $content .= "<br>";
+        $content .= "{$this->indent(1)}}";
 
-        $content = rtrim($content, '<br>');
-        $content = rtrim($content, ',');
+        $content = $this->removeLastOccurrence($content, ',');
+        
         return $content;
     }
 

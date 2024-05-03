@@ -47,6 +47,38 @@ class MysqliDB {
         return $foundConnection;
     }
 
+    // returns the added connection array
+    private function addConnection(Config $config): mysqli {
+
+        // make error handler treat warnings as errors too (warnings interfere with my response)
+        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+            // error was suppressed with the @-operator
+            if (0 === error_reporting()) {
+                return false;
+            }
+            
+            throw new \Exception($errstr, 0, $errno, $errfile, $errline);
+        });
+
+         try {
+            $mysqliConn = new mysqli($config->getHost(), 
+                                      $config->getUsername(), 
+                                      $config->getPassword(),  
+                                      port: $config->getPort());
+
+        } catch (\Exception $e) {
+
+            ErrorThrower::throw('Connection to server failed', $e->getMessage());
+        }
+
+        restore_error_handler();
+
+        $connectionArray = ['config' => $config, 'mysqli' => $mysqliConn];
+        array_push($this->connections, $connectionArray);
+
+        return $connectionArray['mysqli'];
+    }
+
     public function getConnections(): array {
         return $this->connections;
     }
@@ -55,23 +87,4 @@ class MysqliDB {
         $this->connections = $connections;
     }
 
-    // returns the added connection array
-    private function addConnection(Config $config): mysqli {
-
-         try {
-            $mysqliConn = new mysqli($config->getHost(), 
-                                      $config->getUsername(), 
-                                      $config->getPassword(),  
-                                      port: $config->getPort());
-
-        } catch (MysqliSQLException $e) {
-
-            ErrorThrower::throw('Connection to server failed', $e);
-        }
-
-        $connectionArray = ['config' => $config, 'mysqli' => $mysqliConn];
-        array_push($this->connections, $connectionArray);
-
-        return $connectionArray['mysqli'];
-    }
 }
