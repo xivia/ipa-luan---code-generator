@@ -74,11 +74,14 @@ class SnippetControllerPHP extends SnippetControllerBasic {
 
         $header = $this->generateGatewayHeader($className, $tableName);
         $insert = $this->generateInsert($fields, $className, $tableName);
+        $update = $this->generateUpdate($fields, $className, $tableName);
         $footer = $this->generateFooter();
 
         $output = $header.
                   $newLine2.
                   $insert.
+                  $newLine2.
+                  $update.
                   $newLine2.
                   $footer;
 
@@ -131,7 +134,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
             $nameSpaces = $field['COLUMN_NAME_SPACES'];
             $content .= "{$this->indent(3)}'$lname'$nameSpaces => \$this->$lname,<br>";
         }
-        $content .= "{$this->indent(2)}]";
+        $content .= "{$this->indent(2)}];";
         $content .= "<br>";
         $content .= "{$this->indent(1)}}";
 
@@ -225,6 +228,52 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         $content .= "{$this->indent(2)}//echo(\$stmt->error);";
         $content .= "<br><br>";
         $content .= "{$this->indent(2)}return \$this->conn->insert_id;<br>";
+        $content .= "{$this->indent(1)}}";
+
+        return $content;
+
+    }
+
+    private function generateUpdate(array $fields, string $className, string $tablename) {
+
+        $content = "{$this->indent(1)}public function update($className \$obj): int {<br><br>";
+        $content .= "{$this->indent(2)}\$stmt = \$this->conn->prepare(\"UPDATE $tablename SET<br>";
+
+        foreach ($fields as $field) {
+            $name = $field['COLUMN_NAME'];
+            $content .= "{$this->indent(3)}$name = ?,<br>";
+        }
+
+        $content = $this->removeLastOccurrence($content, ',');
+        $content .= "{$this->indent(3)}WHERE \$this->pk = ?;\");";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}// bind requires references (get return value)<br>";
+        $content .= "{$this->indent(2)}\$params = [<br>";
+
+        $bindTypes = '';
+        foreach ($fields as $field) {
+            $name = $field['COLUMN_NAME'];
+            $uname = ucfirst($name);
+            $dataType = $field['DATA_TYPE'];
+            $bindTypes .= self::$BIND_TYPES[$dataType];
+            if ($field['DATA_TYPE'] == 'DateTime') {
+                $content .= "{$this->indent(3)}\$obj->formatDate(\$obj->get$uname()),<br>";
+            } else {
+                $content .= "{$this->indent(3)}\$obj->get$uname(),<br>";
+            }
+        }
+        $content = $this->removeLastOccurrence($content, ',');
+        $content .= "{$this->indent(2)}];";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}\$params[] = \$obj->getId();";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}\$stmt->bind_param('$bindTypes', ...\$params);";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}\$stmt->execute();";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}//echo(\$stmt->error);";
+        $content .= "<br><br>";
+        $content .= "{$this->indent(2)}return \$obj->getId();<br>";
         $content .= "{$this->indent(1)}}";
 
         return $content;
