@@ -68,13 +68,14 @@ class SnippetControllerPHP extends SnippetControllerBasic {
 
         $fields = $this->prepareFields($table->getFields(), ['id']);
         $tableName = $table->getName();
-        $className = $this->convertToClassname($tableName).'Gateway';
+        $modelClassName = $this->convertToClassname($tableName);
+        $className = $modelClassName.'Gateway';
         $newLine1 = '<br>';
         $newLine2 = '<br><br>';
 
         $header = $this->generateGatewayHeader($className, $tableName);
-        $insert = $this->generateInsert($fields, $className, $tableName);
-        $update = $this->generateUpdate($fields, $className, $tableName);
+        $insert = $this->generateInsert($fields, $modelClassName, $tableName);
+        $update = $this->generateUpdate($fields, $modelClassName, $tableName);
         $footer = $this->generateFooter();
 
         $output = $header.
@@ -267,7 +268,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         $content .= "<br><br>";
         $content .= "{$this->indent(2)}\$params[] = \$obj->getId();";
         $content .= "<br><br>";
-        $content .= "{$this->indent(2)}\$stmt->bind_param('$bindTypes', ...\$params);";
+        $content .= "{$this->indent(2)}\$stmt->bind_param('{$bindTypes}i', ...\$params);";
         $content .= "<br><br>";
         $content .= "{$this->indent(2)}\$stmt->execute();";
         $content .= "<br><br>";
