@@ -17,7 +17,8 @@ class SnippetControllerPHP extends SnippetControllerBasic {
     private static string $NAMESPACE_GATEWAY = 'Gateway';
     private static string $PARENT_GATEWAY = 'BasicGateway';
 
-    private static array $DEFAULT_VALUES = ['int' => 'NULL', 'float' => 'NULL', 'string' => '\'\'', 'DateTime' => 'NULL'];
+    private static array $DEFAULT_VALUES_TYPE = ['int' => 'NULL', 'float' => 'NULL', 'string' => '\'\'', 'DateTime' => 'NULL'];
+    private static array $DEFAULT_VALUE_FIELD = ['StateCd' => 1];
     private static array $BIND_TYPES = ['int' => 'i', 'float' => 'd', 'string' => 's', 'DateTime' => 's'];
 
     public function generateModel(int $configId, int $databaseId, int $tableId) {
@@ -298,7 +299,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
 
             $type = strtolower($field['DATA_TYPE']);
             if(in_array($type, $wholeNumberSQLTypes)) {
-                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES['int'];
+                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES_TYPE['int'];
                 if ($field['DEFAULT_VALUE'] == 'NULL') {
                     $field['DATA_TYPE'] = 'int';
                     $field['DATA_TYPE_DISPLAY'] = '?int';
@@ -308,7 +309,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
                 }  
                 
             } else if (in_array($type, $decimalNumberSQLTypes)) {
-                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES['float'];
+                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES_TYPE['float'];
                 if ($field['DEFAULT_VALUE'] == 'NULL') {
                     $field['DATA_TYPE'] = 'float';
                     $field['DATA_TYPE_DISPLAY'] = '?float';
@@ -318,7 +319,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
                 }
                 
             } else if (in_array($type, $stringSQLTypes)) {
-                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES['string'];
+                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES_TYPE['string'];
                 if ($field['DEFAULT_VALUE'] == 'NULL') {
                     $field['DATA_TYPE'] = 'string';
                     $field['DATA_TYPE_DISPLAY'] = '?string';
@@ -328,7 +329,7 @@ class SnippetControllerPHP extends SnippetControllerBasic {
                 }
                 
             } else if (in_array($type, $dateTimeSQLTypes)) {
-                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES['DateTime'];
+                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUES_TYPE['DateTime'];
                 if ($field['DEFAULT_VALUE'] == 'NULL') {
                     $field['DATA_TYPE'] = 'DateTime';
                     $field['DATA_TYPE_DISPLAY'] = '?DateTime';
@@ -340,7 +341,10 @@ class SnippetControllerPHP extends SnippetControllerBasic {
             } else {
                 ErrorThrower::throw("Unknown type \"$type\"");
             }
-
+            // default value for certain fields:
+            if (in_array($field['COLUMN_NAME'], array_keys(self::$DEFAULT_VALUE_FIELD))) {
+                $field['DEFAULT_VALUE'] = self::$DEFAULT_VALUE_FIELD[$field['COLUMN_NAME']];
+            }
         }
 
         return parent::prepareFields($fields, $filterOut);
