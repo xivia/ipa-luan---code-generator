@@ -104,6 +104,8 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         $content .= '<br>';
         $content .= 'use JsonSerializable;';
         $content .= '<br>';
+        $content .= 'use \DateTime;';
+        $content .= '<br>';
         $content .= '<br>';
         $content .= "class $className extends " . self::$PARENT_MODEL . ' implements JsonSerializable {';
 
@@ -179,6 +181,11 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         $content = htmlspecialchars('<?php');
         $content .= '<br>';
         $content .= 'namespace ' . self::$NAMESPACE_GATEWAY . ';';
+        $content .= '<br>';
+        $content .= '<br>';
+        $content .= 'use mysqli;';
+        $content .= '<br>';
+        $content .= 'use mysqli_result;';
         $content .= '<br>';
         $content .= '<br>';
         $content .= "class $className extends " . self::$PARENT_GATEWAY . ' {<br><br>';
