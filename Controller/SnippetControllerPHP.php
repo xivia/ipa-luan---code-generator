@@ -136,7 +136,12 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         foreach ($fields as $field) {
             $lname = lcfirst($field['COLUMN_NAME']);
             $nameSpaces = $field['COLUMN_NAME_SPACES'];
-            $content .= "{$this->indent(3)}'$lname'$nameSpaces => \$this->$lname,<br>";
+            if ($field['DATA_TYPE'] == 'DateTime') {
+                $content .= "{$this->indent(3)}'$lname'$nameSpaces => \$this->formatDate(\$this->$lname),<br>";
+            } else {
+                $content .= "{$this->indent(3)}'$lname'$nameSpaces => \$this->$lname,<br>";
+            }
+            
         }
         $content .= "{$this->indent(2)}];";
         $content .= "<br>";
@@ -153,7 +158,12 @@ class SnippetControllerPHP extends SnippetControllerBasic {
             $name = $field['COLUMN_NAME'];
             $lname = lcfirst($name);
             $nameSpaces = $field['COLUMN_NAME_SPACES'];
-            $content .= "{$this->indent(2)}\$obj->{$lname}$nameSpaces = isset(\$data['$name'])$nameSpaces ? \$data['$name']$nameSpaces : {$field['DEFAULT_VALUE']};<br>";
+            $nameSpacesAddon = $field['COLUMN_NAME_SPACES_ADDON'];
+            if ($field['DATA_TYPE'] == 'DateTime') {
+                $content .= "{$this->indent(2)}\$obj->{$lname}$nameSpaces = isset(\$data['$name'])$nameSpaces ? new DateTime(\$data['$name'])$nameSpacesAddon : {$field['DEFAULT_VALUE']};<br>";
+            } else {
+                $content .= "{$this->indent(2)}\$obj->{$lname}$nameSpaces = isset(\$data['$name'])$nameSpaces ? \$data['$name']$nameSpacesAddon : {$field['DEFAULT_VALUE']};<br>";
+            }
         }
         $content .= "{$this->indent(1)}}";
         $content = rtrim($content, '<br>');
@@ -301,8 +311,21 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         $stringSQLTypes = ['char', 'varchar', 'tinyblob', 'mediumblob', 'blob', 'longblob', 'tinytext', 'mediumtext', 'text', 'longtext'];
         $dateTimeSQLTypes = ['date', 'datetime', 'timestamp', 'time', 'year'];
 
+        // special length for when COLUMN_NAME must be wrapped by "new DateTime()" - used in Model createObject
+        $addonNames = [];
+        foreach ($fields as $field) {
+            if ($field['DATA_TYPE'] == 'datetime' || $field['DATA_TYPE'] == 'date') {
+                $addonNames[] = "new DateTime({$field['COLUMN_NAME']})";
+            } else {
+                $addonNames[] = $field['COLUMN_NAME'];
+            }
+        }
+        $maxAddonNameLen = max(array_map('strlen', $addonNames));
 
-        foreach ($fields as &$field) {
+        foreach ($fields as $key => &$field) {
+            
+            // add key for special spacing with "new DateTime()"
+            $field['COLUMN_NAME_SPACES_ADDON'] = str_repeat('&nbsp;', $maxAddonNameLen - strlen($addonNames[$key]));
 
             $type = strtolower($field['DATA_TYPE']);
             if(in_array($type, $wholeNumberSQLTypes)) {
