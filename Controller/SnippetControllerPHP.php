@@ -153,7 +153,8 @@ class SnippetControllerPHP extends SnippetControllerBasic {
     }
 
     private function generateCreateObject(array $fields, string $className) {
-        $content = "{$this->indent(1)}public static function createObject(array \$data): $className {<br>";
+        $content = "{$this->indent(1)}public static function createObject(array \$data): $className {<br><br>";
+        $content .= "{$this->indent(2)}\$obj = new $className();<br>";
         foreach ($fields as $field) {
             $name = $field['COLUMN_NAME'];
             $lname = lcfirst($name);
@@ -165,6 +166,8 @@ class SnippetControllerPHP extends SnippetControllerBasic {
                 $content .= "{$this->indent(2)}\$obj->{$lname}$nameSpaces = isset(\$data['$name'])$nameSpaces ? \$data['$name']$nameSpacesAddon : {$field['DEFAULT_VALUE']};<br>";
             }
         }
+        $content .= "<br>";
+        $content .= "{$this->indent(2)}return \$obj;<br><br>";
         $content .= "{$this->indent(1)}}";
         $content = rtrim($content, '<br>');
         return $content;
