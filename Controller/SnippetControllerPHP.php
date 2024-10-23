@@ -173,16 +173,27 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         return $content;
     }
 
-    private function generateGettersAndSetters(array $fields) {
+    private function generateGettersAndSetters(array $fields, bool $visibilityGet = false, bool $visibilitySet = false): string {
+        if ($visibilityGet == true) {
+            $visibilityG = 'private';
+        } else {
+            $visibilityG = 'public';
+        }
+
+        if ($visibilitySet == true) {
+            $visibilityS = 'private';
+        } else {
+            $visibilityS = 'public';
+        }
         $content = '';
         foreach ($fields as $field) {
             $name = $field['COLUMN_NAME'];
             $lname = lcfirst($name);
             $uname = ucfirst($name);
             $type = $field['DATA_TYPE_DISPLAY'];
-            $content .= "{$this->indent(1)}public function get$uname(): $type {<br>{$this->indent(2)}return \$this->$lname;<br>{$this->indent(1)}}";
+            $content .= "{$this->indent(1)}$visibilityG function get$uname(): $type {<br>{$this->indent(2)}return \$this->$lname;<br>{$this->indent(1)}}";
             $content .= "<br><br>";
-            $content .= "{$this->indent(1)}public function set$uname($type \$$lname) {<br>{$this->indent(2)}\$this->$lname = \$$lname;<br>{$this->indent(1)}}";
+            $content .= "{$this->indent(1)}$visibilityS function set$uname($type \$$lname) {<br>{$this->indent(2)}\$this->$lname = \$$lname;<br>{$this->indent(1)}}";
             $content .= "<br><br><br>";
         }
         $content = rtrim($content, '<br>');
@@ -383,4 +394,36 @@ class SnippetControllerPHP extends SnippetControllerBasic {
         return parent::prepareFields($fields, $filterOut);
     }
 
+    
+    public function createManual(string $attributes, bool $visibilityGet = false, bool $visibilitySet = false) {
+        $response = new Response();
+        // make array from attributes
+        $attributes = explode("\n", $attributes);
+        $fields = [];
+
+        foreach ($attributes as $attribute) {
+            $attributeExplode = explode(' ', $attribute);
+
+            $attribute = trim($attribute);
+            $datatype = '';
+            // get datatype
+            $datatype = $attributeExplode[1]; 
+            // get attribute and cut out $ from it
+            $attribute = $attributeExplode[2];
+            $attribute = str_replace('$', '', $attribute);
+            
+            $fields[] = ['COLUMN_NAME' => $attribute, 'DATA_TYPE_DISPLAY' => $datatype];
+        }
+
+        $gettersAndSetters = $this->generateGettersAndSetters($fields, $visibilityGet, $visibilitySet);
+
+        $output = $gettersAndSetters;
+
+        $response->setStatus(Response::$STATUS_OK);
+        $response->setMessage('');
+        $response->setHttpResponseCode(Response::$HTTP_STATUS_OK);
+        $response->setData($output);
+
+        $response->respond();
+    }
 }

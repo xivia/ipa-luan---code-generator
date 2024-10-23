@@ -141,6 +141,20 @@ if(isset($_POST['action']) && $_POST['action'] == 'addConfig') {
     exit();
 }
 
+if(isset($_POST['action']) && $_POST['action'] == 'addManual') {
+
+    $attributes = isset($_POST['attributesFormControlTextareaManual']) ? $_POST['attributesFormControlTextareaManual'] : '';
+
+    // convert strings to boolean
+    $visibilityGet = isset($_POST['isPrivateGetter']) ? filter_var($_POST['isPrivateGetter'], FILTER_VALIDATE_BOOLEAN) : false;
+    $visibilitySet = isset($_POST['isPrivateSetter']) ? filter_var($_POST['isPrivateSetter'], FILTER_VALIDATE_BOOLEAN) : false;
+
+    $controller = new SnippetControllerPHP();
+    $controller->createManual($attributes, $visibilityGet, $visibilitySet);
+
+exit();
+}
+
 echo('{"msg": "fallthrough"}');
 
 

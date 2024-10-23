@@ -18,6 +18,11 @@ $( document ).ready(function() {
 
         });
 
+        $('#manualButton').on('click', (event) => {
+            
+            openManualForm();
+
+        });
 
        $('#config_submit').on('click', (event) => {
 
@@ -46,6 +51,44 @@ $( document ).ready(function() {
             .fail((response) => {
                 alert('Failed to add connection :(');
             });
+        });
+
+        $('#generateGetterSetterManual').on('click', (event) => {
+            event.preventDefault();
+        
+            var attributesId = 'attributesFormControlTextareaManual';
+            var attributes = $('#' + attributesId).val(); 
+
+            var visibilityGetId = 'isPrivateGetter';
+            var visibilitySetId = 'isPrivateSetter';
+            var visibilityGet = $('#' + visibilityGetId).is(':checked');
+            var visibilitySet = $('#' + visibilitySetId).is(':checked');
+            
+            var url = `../Controller/router.php`;
+        
+            // Send an AJAX POST request using jQuery
+            $.post(url, {
+                action: 'addManual',
+                [attributesId]: attributes,
+                [visibilityGetId]: visibilityGet,
+                [visibilitySetId]: visibilitySet
+            })
+
+            .done(function(response) {
+                response = JSON.parse(response);
+
+                $('#contentManual > p').html(`<pre>${response.data}</pre>`);
+                $('#contentManual > span').html('');
+                $('#contentManual').attr('hidden', false);
+
+            })
+            .fail(function(xhr, status, error) {
+                console.error('Error:', status, error); // Handle any error
+            });
+        });
+        
+        $('#backButton').on('click', (event) => {
+            closeManualForm();
         });
 
        $('#generatePHPModel').on('click', (event) => {
@@ -239,6 +282,14 @@ $( document ).ready(function() {
 
         });
 
+    $('#copyButtonManual').on('click', (event) => {
+            
+        selectText('contentManual');
+        document.execCommand('copy');
+        clearSelection();
+
+    });
+
     function openConfigForm() {
 
         // hide "new config" button
@@ -254,6 +305,22 @@ $( document ).ready(function() {
 
     }
 
+    function openManualForm() {
+
+        // hide "new config" button
+        $('#manualButton').addClass('disabled');
+
+        var panelManual = $('#contentPanelManual');
+        panelManual.removeClass('hidden');
+
+        var mainPanel = $('#panel');
+        mainPanel.removeClass('disabled');
+
+        var panel = $('#contentPanel');
+        panel.addClass('hidden');
+
+    }
+
     function closeConfigForm() {
 
         document.body.focus();
@@ -261,10 +328,25 @@ $( document ).ready(function() {
         var card = $('#newConfigCard');
         card.removeClass('fade-in');
         card.addClass('fade-out');
+        card.addClass('no-opacity');
+        card.addClass('hidden');
         
         var button = $('#newConfigButton');
         button.removeClass('disabled');
         button.addClass('transition1');
+    }
+
+    function closeManualForm() {
+
+        var contentPanelManual = $('#contentPanelManual');
+        contentPanelManual.addClass('hidden');
+
+        var contentPanel = $('#contentPanel');
+        contentPanel.removeClass('hidden');
+
+        var button = $('#manualButton');
+        button.removeClass('disabled');
+
     }
 
     function clearConfigForm() {
@@ -425,6 +507,9 @@ $( document ).ready(function() {
 
                 tableSelect.attr('hidden', false);
                 dbLoader.attr('hidden', true);
+
+                panel = $('#panel');
+                panel.removeClass('disabled');
 
                 tableSelect.html(new Option('Choose...', 0));
 

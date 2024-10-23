@@ -79,7 +79,7 @@
 
 
 /*-----------------------------*/
-#content {
+#content, #contentManual {
     position: relative;
     background-color: #22262a;
     /*color: #504c44;*/
@@ -121,7 +121,7 @@
     background-color: #040720;
 }
 
-#copyButton {
+#copyButton, #copyButtonManual {
     position: absolute;
     top: 0%;
     left: 90%;
