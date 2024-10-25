@@ -205,7 +205,7 @@ Class SnippetControllerExtJs extends SnippetControllerBasic {
         $content .= "<br>";
         $content .= "{$this->indent(1)}alias: 'widget.{$packetName}_list',";
         $content .= "<br>";
-        $content .= "{$this->indent(1)}id: '{$packetName}_list'";
+        $content .= "{$this->indent(1)}id: '{$packetName}_list',";
         $content .= "<br>";
         $content .= "<br>";
         $content .= "{$this->indent(1)}requires: [";
@@ -265,17 +265,17 @@ Class SnippetControllerExtJs extends SnippetControllerBasic {
             
             $content .= "{$this->indent(2)}{";
             $content .= "<br>";
-            $content .= "{$this->indent(3)}text: '$uname'";
+            $content .= "{$this->indent(3)}text: '$uname',";
             $content .= "<br>";
-            $content .= "{$this->indent(3)}dataIndex: '$lname'";
+            $content .= "{$this->indent(3)}dataIndex: '$lname',";
             $content .= "<br>";
-            $content .= "{$this->indent(3)}hidden: false";
+            $content .= "{$this->indent(3)}hidden: false,";
             $content .= "<br>";
             $content .= "{$this->indent(3)}flex: 1,";
             $content .= "<br>";
             $content .= "{$this->indent(3)}//scope: swo.utils.GlobalFunctions,";
             $content .= "<br>";
-            $content .= "{$this->indent(3)}//renderer: 'render{$name}Grid'";
+            $content .= "{$this->indent(3)}//renderer: 'render{$name}Grid',";
             $content .= "<br>";
             $content .= "{$this->indent(2)}},";
             $content .= "<br>";
@@ -290,7 +290,7 @@ Class SnippetControllerExtJs extends SnippetControllerBasic {
         $content .= "<br>";
         $content .= "{$this->indent(2)}xtype: 'pagingtoolbar',";
         $content .= "<br>";
-        $content .= "{$this->indent(2)}displayInfo: true";
+        $content .= "{$this->indent(2)}displayInfo: true,";
         $content .= "<br>";
         $content .= "{$this->indent(2)}beforePageText: 'Seite',";
         $content .= "<br>";
