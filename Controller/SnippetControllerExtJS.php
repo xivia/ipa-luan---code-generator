@@ -545,17 +545,18 @@ Class SnippetControllerExtJs extends SnippetControllerBasic {
         $content .= "<br>";
 
         foreach ($fields as $field) {
+            $lcFieldColumnName = lcfirst($field['COLUMN_NAME']);
 
             if ($field['DATA_TYPE'] == 'int' || $field['DATA_TYPE'] == 'float') {
                 $content .= "{$this->indent(3)}{";
                 $content .= "<br>";
-                $content .= "{$this->indent(4)}xtype: 'numberfield'";
+                $content .= "{$this->indent(4)}xtype: 'numberfield',";
                 $content .= "<br>";
                 $content .= "{$this->indent(4)}fieldLabel: '{$field['COLUMN_NAME']}',";
                 $content .= "<br>";
                 $content .= "{$this->indent(4)}labelSeperator: '',";
                 $content .= "<br>";
-                $content .= "{$this->indent(4)}name: '{$field['COLUMN_NAME']}',";
+                $content .= "{$this->indent(4)}name: '{$lcFieldColumnName}',";
                 $content .= "<br>";
                 $content .= "{$this->indent(4)}allowBlank: false,";
                 $content .= "<br>";
